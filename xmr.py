@@ -5,7 +5,9 @@ import json
 import time
 import sys
 
+
 class Xmr():
+
     def __init__(self):
         self.headers = {"Content-Type": "application/json"}
         self.xmrapi = "https://xmr.to/api/v1/xmr2btc/"
@@ -34,11 +36,10 @@ class Xmr():
                 'amount': amount}]
         params = {"method": "transfer",
                   "params": {"destinations": dest,
-                      "payment_id": _r["xmr_required_payment_id"],
-                      "fee": 0,
-                      "mixin": 3,
-                      "unlock_time": 0}
-                 }
+                             "payment_id": _r["xmr_required_payment_id"],
+                             "fee": 0,
+                             "mixin": 3,
+                             "unlock_time": 0}}
         params.update({"id": 0, "jsonrpc": "2.0"})
 
         self.post(params, self.walletapi)
