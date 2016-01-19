@@ -4,6 +4,7 @@ import requests
 import json
 import time
 import sys
+import argparse
 
 
 class Xmr():
@@ -60,11 +61,13 @@ class Xmr():
         return int(rr)
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print "%s [amount in btc] [destination address]" % sys.argv[0]
-        sys.exit(1)
-    amount = sys.argv[1]
-    destination = sys.argv[2]
+    parser = argparse.ArgumentParser(description="Send btc via xmr.to")
+    parser.add_argument("amount")
+    parser.add_argument("address")
+    args = parser.parse_args()
+    amount = args.amount
+    destination = args.address
+
     _t = Xmr()
     uuid = _t.gentrans(amount, destination)
     _r = _t.getstatus(uuid)
