@@ -14,7 +14,15 @@ class Xmr():
         self.xmrapi = "https://xmr.to/api/v1/xmr2btc/"
         self.walletapi = "http://localhost:18082/json_rpc"
 
-    def gentrans(self, amount, destination):
+    def usdtobtc(self, amount):
+        tick = requests.get("https://poloniex.com/public?command=returnTicker")
+        divideby = float(tick.json()["USDT_BTC"]["last"])
+        btc = round((float(amount) / divideby), 5)
+        return str(btc)
+
+    def gentrans(self, amount, destination, usd):
+        if usd:
+            amount = self.usdtobtc(amount)
         params = {"btc_amount": amount, "btc_dest_address": destination}
         api = self.xmrapi + "order_create/"
         _r = self.post(params, api)
@@ -64,12 +72,14 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Send btc via xmr.to")
     parser.add_argument("amount")
     parser.add_argument("address")
+    parser.add_argument("-u", "--usd", action='store_true')
     args = parser.parse_args()
     amount = args.amount
     destination = args.address
+    usd = args.usd
 
     _t = Xmr()
-    uuid = _t.gentrans(amount, destination)
+    uuid = _t.gentrans(amount, destination, usd)
     _r = _t.getstatus(uuid)
     while _r["state"] == "TO_BE_CREATED":
         print("Waiting for transaction to be created")
