@@ -17,7 +17,7 @@ class Xmr():
     def usdtobtc(self, amount):
         tick = requests.get("https://poloniex.com/public?command=returnTicker")
         divideby = float(tick.json()["USDT_BTC"]["last"])
-        btc = round((float(amount) / divideby), 5)
+        btc = round(float(amount) / divideby, 8)
         return str(btc)
 
     def gentrans(self, amount, destination, usd):
